@@ -8,33 +8,33 @@ import (
 	blst "github.com/supranational/blst/bindings/go"
 )
 
-func (k *PublicKey) Verify(msg []byte, s *Signature) bool {
-	return (*blst.P1Affine)(s).Verify(false, (*blst.P2Affine)(k), false, msg, dst)
+func (pub *PublicKey) Verify(msg []byte, s *Signature) bool {
+	return (*blst.P1Affine)(s).Verify(false, (*blst.P2Affine)(pub), false, msg, dst)
 }
 
-func (k *PublicKey) Bytes() []byte {
-	return (*blst.P2Affine)(k).Compress()
+func (pub *PublicKey) Bytes() []byte {
+	return (*blst.P2Affine)(pub).Compress()
 }
 
-func (k *PublicKey) FromBytes(bts []byte) error {
+func (pub *PublicKey) FromBytes(bts []byte) error {
 	secret := new(blst.P2Affine).Uncompress(bts)
 	if secret == nil {
 		return fmt.Errorf("invalid blst public key")
 	}
 
-	*k = (PublicKey)(*secret)
+	*pub = (PublicKey)(*secret)
 	return nil
 }
 
-func (k *PublicKey) String() string {
-	return base64.StdEncoding.EncodeToString(k.Bytes())
+func (pub *PublicKey) String() string {
+	return base64.StdEncoding.EncodeToString(pub.Bytes())
 }
 
-func (k *PublicKey) MarshalJSON() ([]byte, error) {
-	return []byte(strconv.Quote(k.String())), nil
+func (pub *PublicKey) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.Quote(pub.String())), nil
 }
 
-func (k *PublicKey) UnmarshalJSON(b []byte) error {
+func (pub *PublicKey) UnmarshalJSON(b []byte) error {
 	unquoted, err := strconv.Unquote(string(b))
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (k *PublicKey) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	return k.FromBytes(bts)
+	return pub.FromBytes(bts)
 }
 
 func AggregatePublicKeys(pubs []*PublicKey) *PublicKey {

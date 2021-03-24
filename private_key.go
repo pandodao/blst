@@ -23,38 +23,38 @@ func GenerateKey() *PrivateKey {
 	return (*PrivateKey)(blst.KeyGen(ikm))
 }
 
-func (k *PrivateKey) Sign(msg []byte) *Signature {
-	return (*Signature)(new(blst.P1Affine).Sign((*blst.SecretKey)(k), msg, dst))
+func (key *PrivateKey) Sign(msg []byte) *Signature {
+	return (*Signature)(new(blst.P1Affine).Sign((*blst.SecretKey)(key), msg, dst))
 }
 
-func (k *PrivateKey) PublicKey() *PublicKey {
-	pub := new(blst.P2Affine).From((*blst.SecretKey)(k))
+func (key *PrivateKey) PublicKey() *PublicKey {
+	pub := new(blst.P2Affine).From((*blst.SecretKey)(key))
 	return (*PublicKey)(pub)
 }
 
-func (k *PrivateKey) Bytes() []byte {
-	return (*blst.SecretKey)(k).Serialize()
+func (key *PrivateKey) Bytes() []byte {
+	return (*blst.SecretKey)(key).Serialize()
 }
 
-func (k *PrivateKey) FromBytes(bts []byte) error {
+func (key *PrivateKey) FromBytes(bts []byte) error {
 	secret := new(blst.SecretKey).Deserialize(bts)
 	if secret == nil {
 		return fmt.Errorf("invalid blst private key")
 	}
 
-	*k = (PrivateKey)(*secret)
+	*key = (PrivateKey)(*secret)
 	return nil
 }
 
-func (k *PrivateKey) String() string {
-	return base64.StdEncoding.EncodeToString(k.Bytes())
+func (key *PrivateKey) String() string {
+	return base64.StdEncoding.EncodeToString(key.Bytes())
 }
 
-func (k *PrivateKey) MarshalJSON() ([]byte, error) {
-	return []byte(strconv.Quote(k.String())), nil
+func (key *PrivateKey) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.Quote(key.String())), nil
 }
 
-func (k *PrivateKey) UnmarshalJSON(b []byte) error {
+func (key *PrivateKey) UnmarshalJSON(b []byte) error {
 	unquoted, err := strconv.Unquote(string(b))
 	if err != nil {
 		return err
@@ -65,5 +65,5 @@ func (k *PrivateKey) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	return k.FromBytes(bts)
+	return key.FromBytes(bts)
 }
