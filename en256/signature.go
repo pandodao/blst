@@ -7,11 +7,11 @@ import (
 	"github.com/pandodao/blst/en256/en256"
 )
 
-func (pub *Signature) Bytes() ([]byte, error) {
-	return pub.Point.MarshalBinary()
+func (sig *Signature) Bytes() ([]byte, error) {
+	return sig.Point.MarshalBinary()
 }
 
-func (pub *Signature) FromBytes(bts []byte) error {
+func (sig *Signature) FromBytes(bts []byte) error {
 	suite := en256.NewSuiteG1()
 	point := suite.G1().Point()
 	err := point.UnmarshalBinary(bts)
@@ -19,19 +19,19 @@ func (pub *Signature) FromBytes(bts []byte) error {
 		return err
 	}
 
-	pub.Point = point
+	sig.Point = point
 	return nil
 }
 
-func (pub *Signature) MarshalJSON() ([]byte, error) {
-	bts, err := pub.Bytes()
+func (sig *Signature) MarshalJSON() ([]byte, error) {
+	bts, err := sig.Bytes()
 	if err != nil {
 		return nil, err
 	}
 	return []byte(strconv.Quote(hex.EncodeToString(bts))), nil
 }
 
-func (pub *Signature) UnmarshalJSON(b []byte) error {
+func (sig *Signature) UnmarshalJSON(b []byte) error {
 	unquoted, err := strconv.Unquote(string(b))
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func (pub *Signature) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	return pub.FromBytes(bts)
+	return sig.FromBytes(bts)
 }
 
 func AggregateSignatures(sigs []*Signature) *Signature {
