@@ -95,11 +95,19 @@ func (sig *Signature) FromBytes(bts []byte) error {
 	return nil
 }
 
-func (pub *Signature) MarshalJSON() ([]byte, error) {
-	return []byte(strconv.Quote(hex.EncodeToString(pub.Bytes()))), nil
+func (sig *Signature) MarshalBinary() ([]byte, error) {
+	return sig.Compress(), nil
 }
 
-func (pub *Signature) UnmarshalJSON(b []byte) error {
+func (sig *Signature) UnmarshalBinary(data []byte) error {
+	return sig.FromBytes(data)
+}
+
+func (sig *Signature) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.Quote(hex.EncodeToString(sig.Compress()))), nil
+}
+
+func (sig *Signature) UnmarshalJSON(b []byte) error {
 	unquoted, err := strconv.Unquote(string(b))
 	if err != nil {
 		return err
@@ -110,7 +118,7 @@ func (pub *Signature) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	return pub.FromBytes(bts)
+	return sig.FromBytes(bts)
 }
 
 func AggregateSignatures(sigs []*Signature) *Signature {

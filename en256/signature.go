@@ -95,6 +95,14 @@ func (sig *Signature) FromBytes(bts []byte) error {
 	return nil
 }
 
+func (sig *Signature) MarshalBinary() ([]byte, error) {
+	return sig.Compress(), nil
+}
+
+func (sig *Signature) UnmarshalBinary(data []byte) error {
+	return sig.FromBytes(data)
+}
+
 func (sig *Signature) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.Quote(hex.EncodeToString(sig.Compress()))), nil
 }
