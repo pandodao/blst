@@ -122,13 +122,10 @@ func (sig *Signature) UnmarshalJSON(b []byte) error {
 }
 
 func AggregateSignatures(sigs []*Signature) *Signature {
-	var aggSig *Signature
+	suite := bn256.NewSuiteG1()
+	point := suite.G1().Point()
 	for _, s := range sigs {
-		if aggSig == nil {
-			aggSig = s
-		} else {
-			aggSig.Point.Add(aggSig.Point, s.Point)
-		}
+		point = point.Add(point, s.Point)
 	}
-	return aggSig
+	return &Signature{Point: point}
 }

@@ -59,13 +59,10 @@ func (pub *PublicKey) UnmarshalJSON(b []byte) error {
 }
 
 func AggregatePublicKeys(pubs []*PublicKey) *PublicKey {
-	var aggPub *PublicKey
+	suite := en256.NewSuiteG2()
+	point := suite.G2().Point()
 	for _, p := range pubs {
-		if aggPub == nil {
-			aggPub = p
-		} else {
-			aggPub.Point.Add(aggPub.Point, p.Point)
-		}
+		point = point.Add(point, p.Point)
 	}
-	return aggPub
+	return &PublicKey{Point: point}
 }
