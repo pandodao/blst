@@ -10,18 +10,22 @@ import (
 
 func (pub *PublicKey) Verify(msg []byte, s *Signature) bool {
 	scheme := bls.NewSchemeOnG1(bn256.NewSuiteG2())
-	bts, err := s.Bytes()
-	if err != nil {
-		return false
-	}
-	if err := scheme.Verify(pub.Point, msg, bts); err != nil {
+	if err := scheme.Verify(pub.Point, msg, s.Bytes()); err != nil {
 		return false
 	}
 	return true
 }
 
-func (pub *PublicKey) Bytes() ([]byte, error) {
-	return pub.Point.MarshalBinary()
+func (pub *PublicKey) Bytes() []byte {
+	bts, err := pub.Point.MarshalBinary()
+	if err != nil {
+		panic(err)
+	}
+	return bts
+}
+
+func (pub *PublicKey) String() string {
+	return hex.EncodeToString(pub.Bytes())
 }
 
 func (pub *PublicKey) FromBytes(bts []byte) error {
@@ -37,11 +41,7 @@ func (pub *PublicKey) FromBytes(bts []byte) error {
 }
 
 func (pub *PublicKey) MarshalJSON() ([]byte, error) {
-	bts, err := pub.Bytes()
-	if err != nil {
-		return nil, err
-	}
-	return []byte(strconv.Quote(hex.EncodeToString(bts))), nil
+	return []byte(strconv.Quote(hex.EncodeToString(pub.Bytes()))), nil
 }
 
 func (pub *PublicKey) UnmarshalJSON(b []byte) error {

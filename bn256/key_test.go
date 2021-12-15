@@ -22,10 +22,8 @@ func TestPrivateKeyMarshal(t *testing.T) {
 	P := p.PublicKey()
 	P1 := new(PublicKey)
 	{
-		bts, err := P.Bytes()
-		assert.Nil(err, "PublicKey.Bytes")
-
-		err = P1.FromBytes(bts)
+		bts := P.Bytes()
+		err := P1.FromBytes(bts)
 		assert.Nil(err, "PublicKey.FromBytes")
 		assert.Equal(P.String(), P1.String(), "P != P1")
 	}
@@ -35,10 +33,8 @@ func TestPrivateKeyMarshal(t *testing.T) {
 	assert.Nil(err, "PrivateKey.Sign")
 	s1 := new(Signature)
 	{
-		bts, err := s.Bytes()
-		assert.Nil(err, "Signature.Bytes")
-
-		err = s1.FromBytes(bts)
+		bts := s.Bytes()
+		err := s1.FromBytes(bts)
 		assert.Nil(err, "Signature.FromBytes")
 		assert.Equal(s.String(), s1.String(), "s != s1")
 	}
