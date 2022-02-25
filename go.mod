@@ -3,7 +3,7 @@ module github.com/pandodao/blst
 go 1.16
 
 require (
-	github.com/drand/kyber v1.1.7
+	github.com/drand/kyber v1.1.10
 	github.com/kr/text v0.2.0 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/supranational/blst v0.3.6
