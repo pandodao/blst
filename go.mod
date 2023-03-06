@@ -9,6 +9,6 @@ require (
 	github.com/supranational/blst v0.3.6
 	go.dedis.ch/fixbuf v1.0.3
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
-	golang.org/x/sys v0.0.0-20211213223007-03aa0b5f6827
+	golang.org/x/sys v0.6.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
